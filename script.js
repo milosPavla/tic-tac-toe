@@ -15,8 +15,10 @@ function createPlayer(name) {
     const addPoint = () => points++;
 
     const getPoints = () => points;
+
+    const resetPoints = () => points = 0;
     
-    return {username, points, addPoint, getPoints};
+    return {username, points, addPoint, getPoints, resetPoints};
 }
 
 function playerMove(e) {
@@ -30,7 +32,7 @@ function playerMove(e) {
 function checkField(field) {
     if(field.textContent == "") {
         markField(field);
-        game1.changeOrder();
+        game.changeOrder();
     }
     else {
         alert("Field is not available!");
@@ -38,7 +40,7 @@ function checkField(field) {
 }
 
 function markField(field) {
-    if(game1.checkOrder() == true) {
+    if(game.checkOrder() == true) {
         field.textContent = "X";
     }
     else {
@@ -46,15 +48,38 @@ function markField(field) {
     }
 }
 
+function clearFields() {
+    fieldArr.forEach(field => {
+        field.textContent = "";
+    });
+}
+
 function showPlayerWinner() {
-    if(game1.checkOrder() == true) {
-        console.log("Player 1 winner!");
+    if(game.checkOrder() == true) {
         player1.addPoint();
+        if(player1.getPoints() == 3) {
+            alert("P1 WON!");
+            player1.resetPoints();
+            player2.resetPoints();
+           
+        }
+        else {
+            alert("P1 +1 Point!");
+        }
     }
     else {
-        console.log("Player 2 winner!");
         player2.addPoint();
+        if(player2.getPoints() == 3) {
+            alert("P2 WON!");
+            player1.resetPoints();
+            player2.resetPoints();
+            
+        }
+        else {
+            alert("P2 +1 Point!");
+        }
     }
+    clearFields();
 }
 
 function checkWinner(fieldArr) {
@@ -87,6 +112,10 @@ function checkWinner(fieldArr) {
     
 }
 
+const game = createGame();
+
+const player1 = createPlayer("milosPavla");
+const player2 = createPlayer("slakiCar");
 
 const fieldArr = document.querySelectorAll('.field');
 
@@ -94,7 +123,8 @@ fieldArr.forEach(field => {
     field.addEventListener('click', playerMove);
 });
 
-const game1 = createGame();
 
-const player1 = createPlayer("milosPavla");
-const player2 = createPlayer("slakiCar");
+
+
+
+

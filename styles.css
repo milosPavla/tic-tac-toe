@@ -17,4 +17,6 @@
     width: 140px;
     border: 1px solid black;
     cursor: pointer;
+    text-align: center;
+    font-size: 90px;
 }
