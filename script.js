@@ -33,6 +33,7 @@ function checkField(field) {
     if(field.textContent == "") {
         markField(field);
         game.changeOrder();
+        scaleActivePlayer();
     }
     else {
         alert("Field is not available!");
@@ -55,30 +56,23 @@ function clearFields() {
 }
 
 function showPlayerWinner() {
-    if(game.checkOrder() == true) {
+    if(game.checkOrder() == false) {
         player1.addPoint();
         if(player1.getPoints() == 3) {
-            alert("P1 WON!");
+            
             player1.resetPoints();
             player2.resetPoints();
-           
-        }
-        else {
-            alert("P1 +1 Point!");
         }
     }
     else {
         player2.addPoint();
         if(player2.getPoints() == 3) {
-            alert("P2 WON!");
-            player1.resetPoints();
-            player2.resetPoints();
             
-        }
-        else {
-            alert("P2 +1 Point!");
+            player1.resetPoints();
+            player2.resetPoints();    
         }
     }
+    refreshScoreInfo();
     clearFields();
 }
 
@@ -112,12 +106,36 @@ function checkWinner(fieldArr) {
     
 }
 
+function fillNames() {
+    document.querySelector('#name1').textContent = player1.username;
+    document.querySelector('#name2').textContent = player2.username;
+}
+
+function refreshScoreInfo() {
+    document.querySelector('#score1').textContent = `Score: ${player1.getPoints()}`;
+    document.querySelector('#score2').textContent = `Score: ${player2.getPoints()}`;
+}
+
+function scaleActivePlayer() {
+    if(game.checkOrder() == true) {
+        document.querySelector('#cont-1').classList.add('active');
+        document.querySelector('#cont-2').classList.remove('active');
+    }
+    else {
+        document.querySelector('#cont-1').classList.remove('active');
+        document.querySelector('#cont-2').classList.add('active');
+    }
+    
+}
+
 const game = createGame();
 
 const player1 = createPlayer("milosPavla");
 const player2 = createPlayer("slakiCar");
 
 const fieldArr = document.querySelectorAll('.field');
+
+fillNames();
 
 fieldArr.forEach(field => {
     field.addEventListener('click', playerMove);
