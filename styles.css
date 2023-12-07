@@ -31,7 +31,7 @@ body {
     width: 200px;
     height: 200px;
     border-radius: 10px;
-    opacity: 0.8;
+    cursor: pointer;
 }
 
 .outter-cont .players-info .player-container img {
@@ -41,11 +41,14 @@ body {
 
 .outter-cont .players-info .active {
     scale: 1.1;
-    opacity: 1;
     border-bottom: 2px solid black;
     border-right: 2px solid black;
     transition: 0.5s;
-    cursor: pointer;
+}
+
+.final-winner {
+    scale: 1.5;
+    transition: 3s;
 }
 
 .outter-cont .players-info .player-container .player-name {
@@ -61,6 +64,11 @@ body {
     background-color: #E96479;
 }
 
+.outter-cont .players-info .winner {
+    scale: 1.25;
+    transition: 0.5s;
+    color: #2d8523;
+}  
 
 .container {
     height: 420px;
@@ -84,3 +92,26 @@ body {
     text-align: center;
     font-size: 90px;
 }
+
+.container .shake {
+    animation: shake 0.4s ease-in-out 2;
+    background-color: #f5cfcf;
+}
+
+@keyframes shake {
+    0% {
+      transform: translateX(0);
+    }
+    25% {
+      transform: translateX(-5px);
+    }
+    50% {
+      transform: translateX(5px);
+    }
+    75% {
+      transform: translateX(-5px);
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }

@@ -36,7 +36,10 @@ function checkField(field) {
         scaleActivePlayer();
     }
     else {
-        alert("Field is not available!");
+        field.classList.add('shake');
+        setTimeout(() => {
+            field.classList.remove('shake');
+        }, 1000);
     }
 }
 
@@ -58,52 +61,112 @@ function clearFields() {
 function showPlayerWinner() {
     if(game.checkOrder() == false) {
         player1.addPoint();
+        
+        document.querySelector('#score1').classList.add('winner');
+
+        setTimeout(() => {
+            document.querySelector('#score1').classList.remove('winner');
+        }, 1000);
+        
         if(player1.getPoints() == 3) {
+            setTimeout(() => {
+                player1.resetPoints();
+                player2.resetPoints();
+
+                refreshScoreInfo();
+
+                announceWinner(1);
+            }, 1000);
             
-            player1.resetPoints();
-            player2.resetPoints();
         }
     }
     else {
         player2.addPoint();
+        
+        document.querySelector('#score2').classList.add('winner');
+
+        setTimeout(() => {
+            document.querySelector('#score2').classList.remove('winner');
+        }, 1000);
+
         if(player2.getPoints() == 3) {
-            
-            player1.resetPoints();
-            player2.resetPoints();    
+            setTimeout(() => {
+                player1.resetPoints();
+                player2.resetPoints(); 
+
+                refreshScoreInfo();
+
+                announceWinner(2);
+            }, 1000);
+              
         }
     }
+
     refreshScoreInfo();
     clearFields();
 }
 
+
 function checkWinner(fieldArr) {
-    let symbolMatrix = [[], [], []];
+    setTimeout(() => {
+        let symbolMatrix = [[], [], []];
 
-    for(let i = 0; i < 3; i ++ ) {
-        for(let j = 0; j < 3; j ++ ) {
-            symbolMatrix[i][j] = fieldArr[3 * i + j].textContent;
+        // Filling 3x3 matrix with values from array of fields
+        for(let i = 0; i < 3; i ++ ) {
+            for(let j = 0; j < 3; j ++ ) {
+                symbolMatrix[i][j] = fieldArr[3 * i + j].textContent;
+            }
         }
-    }
 
-    for(let i = 0; i < 3; i ++ ) {
-        if(symbolMatrix[i][0] != "" && symbolMatrix[i][0] == symbolMatrix[i][1] && symbolMatrix[i][1] == symbolMatrix[i][2]) {
-            showPlayerWinner();
+        // Checking if draw is active. If it's not a draw, checking for winning combination
+        if(checkIfDraw()) {
+            alert("It's a draw!");
+            clearFields();
         }
-    }
+        else {
+            // Checking if any of winning layouts is present
+            for(let i = 0; i < 3; i ++ ) {
+                if(symbolMatrix[i][0] != "" && symbolMatrix[i][0] == symbolMatrix[i][1] && symbolMatrix[i][1] == symbolMatrix[i][2]) {
+                    showPlayerWinner();
+                }
+            }
 
-    for(let i = 0; i < 3; i ++ ) {
-        if(symbolMatrix[0][i] != "" && symbolMatrix[0][i] == symbolMatrix[1][i] && symbolMatrix[1][i] == symbolMatrix[2][i]) {
-            showPlayerWinner();
-        }
-    }
+            for(let i = 0; i < 3; i ++ ) {
+                if(symbolMatrix[0][i] != "" && symbolMatrix[0][i] == symbolMatrix[1][i] && symbolMatrix[1][i] == symbolMatrix[2][i]) {
+                    showPlayerWinner();
+                }
+            }
 
-    if(symbolMatrix[1][1] != "") {
-        if((symbolMatrix[0][0] == symbolMatrix[1][1] && symbolMatrix[0][0] == symbolMatrix[2][2]) || 
-        (symbolMatrix[0][2] == symbolMatrix[1][1] && symbolMatrix[0][2] == symbolMatrix[2][0])) {
-            showPlayerWinner();
+            if(symbolMatrix[1][1] != "") {
+                if((symbolMatrix[0][0] == symbolMatrix[1][1] && symbolMatrix[0][0] == symbolMatrix[2][2]) || 
+                (symbolMatrix[0][2] == symbolMatrix[1][1] && symbolMatrix[0][2] == symbolMatrix[2][0])) {
+                    showPlayerWinner();
+                }
+            }
         }
-    }
-    
+    }, 2000);
+}
+
+// Checking if draw is active, flag is raised by default, but if at least one field is empty, flag is put to false
+function checkIfDraw() {
+    let is_draw = true;
+
+    fieldArr.forEach(field => {
+        if(field.textContent === "") {
+            is_draw = false;
+        }
+    });
+
+    return is_draw;
+}
+
+function announceWinner(n) {
+    document.querySelector(`#cont-${n}`).classList.add('final-winner');
+    document.querySelector(`#score${n}`).textContent = "WINNER";
+    setTimeout(() => {
+        document.querySelector(`#cont-${n}`).classList.remove('final-winner');
+        refreshScoreInfo();
+    }, 4000);
 }
 
 function fillNames() {
